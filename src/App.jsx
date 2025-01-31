@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Inputs from './Components/Inputs';
 import Message from './Components/Message';
-import Header from './components/Header';
+import Header from './Components/Header';
 
 //Function to fetch the data from the server and return the response as a string.
 
