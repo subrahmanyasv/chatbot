@@ -5,7 +5,7 @@ import Header from './components/Header';
 
 //Function to fetch the data from the server and return the response as a string.
 
-const WebSocketURL = "ws://localhost:8080"
+const WebSocketURL = "ws://chatbot-backend-1i8i.onrender.com"
 
 const App = () => {
 
@@ -22,24 +22,30 @@ const App = () => {
     const socket = new WebSocket(WebSocketURL);
 
     socket.onopen = () => {
-      console.log("✅ WebSocket connected");
+      console.log("WebSocket connected");
       socket.send(inputValue); // Send user input when socket is open
     };
 
     socket.onmessage = (event) => {
-      console.log("📩 Received:", event.data);
+      console.log("Received:", event.data);
       setMessages((prev) => [...prev, { query: inputValue, response: event.data }]); // Append new response
       setInputValue(""); // Clear input after receiving a response
       socket.close(); // Close WebSocket after getting response
     };
 
     socket.onerror = (error) => {
-      console.error("❌ WebSocket error:", error);
+      console.error("WebSocket error:", error);
     };
 
     socket.onclose = () => {
-      console.log("🔴 WebSocket closed");
+      console.log("WebSocket closed");
     };
+
+
+    return() => {
+      socket.close();
+      console.log("WebSocket disconnected");
+    }
   }, [inputValue]);
 
 
