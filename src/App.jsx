@@ -10,7 +10,14 @@ const WebSocketURL = "ws://chatbot-backend-1i8i.onrender.com"
 const App = () => {
 
   //Necessary states and refrences.
-  const [messages, setMessages] = useState([{ query: 'Hello', response: 'Hi' }]); //Store the chats.
+  const [messages, setMessages] = useState([
+    { 
+      query: 'Hello', response: 'Hi' 
+    },{
+      query: 'How are you?', response: 'I am fine, thank you.'
+    }
+
+  ]); //Store the chats.
   const [inputValue, setInputValue] = useState("");  //Get the current query.
   const [loading, setLoading] = useState(false);  //To implement loading spinner.
   const msgContainerRef = useRef(null);   //Refrence to msgContainer to make it scroll down.
@@ -61,14 +68,14 @@ const App = () => {
   return (
     <div className="App flex flex-col h-screen">
       <Header />
-      <div ref={msgContainerRef} className="msgContainer flex justify-center align-center flex-grow bg-gray-700 overflow-auto">
+      <div ref={msgContainerRef} className="msgContainer flex justify-center align-center flex-grow bg-gray-900 overflow-auto">
         <div className="w-9/12 text-white">
             {messages.map((message, index) => (
               <Message key={index} message={message} />
             ))}
         </div>
       </div>
-      <div className="w-full flex justify-center items-center bg-gray-700 flex-none">
+      <div className="w-full flex justify-center items-center bg-gray-900 flex-none">
         <Inputs inputValue={inputValue} setInputValue={setInputValue} />
       </div>
     </div>
