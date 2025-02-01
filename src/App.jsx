@@ -54,7 +54,7 @@ const App = () => {
 
 
   return (
-    <div className="App flex flex-col h-screen">
+    <div className="App flex flex-col h-[100dvh]">
       <Header setMessages={ setMessages } />
       <div ref={msgContainerRef} className="msgContainer flex justify-center align-center flex-grow bg-gray-900 overflow-auto">
         <div className="w-full p-2 text-xs sm:text-sm sm:w-9/12 text-white">
