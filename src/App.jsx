@@ -3,21 +3,13 @@ import Inputs from './Components/Inputs';
 import Message from './Components/Message';
 import Header from './Components/Header';
 
-//Function to fetch the data from the server and return the response as a string.
 
+//Web socket url
 const WebSocketURL = "wss://chatbot-backend-1i8i.onrender.com"
 
 const App = () => {
-
   //Necessary states and refrences.
-  const [messages, setMessages] = useState([
-    { 
-      query: 'Hello', response: 'Hi' 
-    },{
-      query: 'How are you?', response: 'I am fine, thank you.'
-    }
-
-  ]); //Store the chats.
+  const [messages, setMessages] = useState([]); //Store the chats.
   const [inputValue, setInputValue] = useState("");  //Get the current query.
   const [loading, setLoading] = useState(false);  //To implement loading spinner.
   const msgContainerRef = useRef(null);   //Refrence to msgContainer to make it scroll down.
@@ -26,11 +18,12 @@ const App = () => {
   useEffect(() => {
     if (!inputValue) return; // Prevent empty messages from triggering WebSocket
 
-    const socket = new WebSocket(WebSocketURL);
+    const socket = new WebSocket(WebSocketURL); //Create new websocket.
 
     socket.onopen = () => {
       console.log("WebSocket connected");
       socket.send(inputValue); // Send user input when socket is open
+      setLoading(true); // Set loading to true
     };
 
     socket.onmessage = (event) => {
@@ -46,13 +39,8 @@ const App = () => {
 
     socket.onclose = () => {
       console.log("WebSocket closed");
+      setLoading(false);
     };
-
-
-    return() => {
-      socket.close();
-      console.log("WebSocket disconnected");
-    }
   }, [inputValue]);
 
 
@@ -67,16 +55,16 @@ const App = () => {
 
   return (
     <div className="App flex flex-col h-screen">
-      <Header />
+      <Header setMessages={ setMessages } />
       <div ref={msgContainerRef} className="msgContainer flex justify-center align-center flex-grow bg-gray-900 overflow-auto">
-        <div className="w-9/12 text-white">
+        <div className="w-full p-2 text-xs sm:text-sm sm:w-9/12 text-white">
             {messages.map((message, index) => (
               <Message key={index} message={message} />
             ))}
         </div>
       </div>
       <div className="w-full flex justify-center items-center bg-gray-900 flex-none">
-        <Inputs inputValue={inputValue} setInputValue={setInputValue} />
+        <Inputs inputValue={ inputValue } setInputValue={ setInputValue } loading={ loading }/>
       </div>
     </div>
   );
