@@ -5,7 +5,7 @@ import Header from './Components/Header';
 
 //Function to fetch the data from the server and return the response as a string.
 
-const WebSocketURL = "ws://chatbot-backend-1i8i.onrender.com"
+const WebSocketURL = "wss://chatbot-backend-1i8i.onrender.com"
 
 const App = () => {
 
