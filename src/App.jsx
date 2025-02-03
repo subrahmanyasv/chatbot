@@ -10,38 +10,45 @@ const WebSocketURL = "wss://chatbot-backend-1i8i.onrender.com"
 const App = () => {
   //Necessary states and refrences.
   const [messages, setMessages] = useState([]); //Store the chats.
-  const [inputValue, setInputValue] = useState("");  //Get the current query.
   const [loading, setLoading] = useState(false);  //To implement loading spinner.
   const msgContainerRef = useRef(null);   //Refrence to msgContainer to make it scroll down.
   
 
   useEffect(() => {
-    if (!inputValue) return; // Prevent empty messages from triggering WebSocket
+    if (messages.length === 0 || messages[messages.length - 1].response !== '') return;
 
     const socket = new WebSocket(WebSocketURL); //Create new websocket.
 
     socket.onopen = () => {
       console.log("WebSocket connected");
-      socket.send(inputValue); // Send user input when socket is open
+      socket.send(messages[messages.length - 1].query); // Send user input when socket is open
       setLoading(true); // Set loading to true
     };
 
     socket.onmessage = (event) => {
       console.log("Received:", event.data);
-      setMessages((prev) => [...prev, { query: inputValue, response: event.data }]); // Append new response
-      setInputValue(""); // Clear input after receiving a response
-      socket.close(); // Close WebSocket after getting response
+      setMessages((prev) => {
+        const localMessage = prev;
+        localMessage[localMessage.length - 1].response = event.data; // Update last message with response
+        return [...localMessage];
+      }); // Append new response
+      setLoading(false); // Set loading to false
     };
 
     socket.onerror = (error) => {
       console.error("WebSocket error:", error);
+      setLoading(false);
     };
 
     socket.onclose = () => {
       console.log("WebSocket closed");
       setLoading(false);
     };
-  }, [inputValue]);
+
+    return()=>{
+        socket.close();
+    }
+  }, [messages]);
 
 
   //Hook to scroll down the msgContainer.
@@ -64,7 +71,7 @@ const App = () => {
         </div>
       </div>
       <div className="w-full flex justify-center items-center bg-gray-900 flex-none">
-        <Inputs inputValue={ inputValue } setInputValue={ setInputValue } loading={ loading }/>
+        <Inputs setMessages={ setMessages } loading={ loading }/>
       </div>
     </div>
   );
